@@ -1,0 +1,27 @@
+<div>
+    <h1 class="home_title">Bitcoin price variations</h1>
+    <p class="home_subtitle">Last two weeks.</p>
+
+    <table class="home_table">
+      <thead >
+        <th >
+          Date
+        </th>
+        <th>
+          Value
+        </th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of bitcoinsToShow" (click)="navigateToDetails(item.date)">
+          <td>
+            {{ item.date | date: 'dd/MM/yyyy'}}
+          </td>
+          <td>
+            {{ item.value | currency: 'USD':true: '1.2-2'}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  

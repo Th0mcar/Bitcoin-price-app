@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'bitcoin-price-app' title`, () => {
+  it(`should have the 'angular-electron-bitcoin' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('bitcoin-price-app');
+    expect(app.title).toEqual('angular-electron-bitcoin');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, bitcoin-price-app');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, angular-electron-bitcoin');
   });
 });

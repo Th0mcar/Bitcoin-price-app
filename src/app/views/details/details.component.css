@@ -1,0 +1,23 @@
+.details_title {
+    color: #fda655;
+    margin-left: 16px;
+}
+
+.details_currency {
+    color: #ecfa6d;
+    margin-left: 16px;
+}
+
+.details_go_back_button {
+    background-color: white;
+    color: #fda655;
+    border: 2px solid #fda655;
+    margin-top: 16px;
+    margin-left: 16px;
+    margin-bottom: 16px;
+    padding:12px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+}

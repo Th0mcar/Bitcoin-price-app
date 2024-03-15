@@ -1,0 +1,10 @@
+
+<h1 class="details_title">Bitcoin price {{date | date: 'dd/MM/yyyy'}}</h1>
+
+<div  *ngFor="let i of prices" >
+    <h3 class="details_currency" >
+        {{i.code}}: {{i.value | currency: i.code :true: '1.2-2'}}
+    </h3>
+</div>
+
+<button class="details_go_back_button" (click)="goBack()">go back</button>

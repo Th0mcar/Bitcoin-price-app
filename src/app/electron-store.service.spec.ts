@@ -1,37 +1,16 @@
-import { Injectable } from '@angular/core';
-import * as ElectronStore from 'electron-store';
+import { TestBed } from '@angular/core/testing';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ElectronStoreService {
-  private store: ElectronStore | undefined;
-  constructor() {
-    if (window.require) {
-      try {
-        const storeClass = window.require("electron-store");
-        this.store = new storeClass();
-      } catch (e) {
-        throw e;
-      }
-    } else {
-      console.warn("electron-store was not loaded");
-    }
-   }
+import { ElectronStoreService } from './electron-sotre.service';
 
-   get = <T>(key: string): T => {
-    if(!this.store) {
-      console.warn("electron-store was not loaded");
-      return {} as T;
-    }
-    return this.store.get(key) as T;
-   }
+describe('ElectronStoreService', () => {
+  let service: ElectronStoreService;
 
-   set = (key: string, value: any): void => {
-    if(!this.store) {
-      console.warn("electron-store was not loaded");
-      return;
-    }
-     this.store.set(key, value);
-   }
-}
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(ElectronStoreService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ElectronStoreService } from '../../electron-store.service';
+import { ElectronStoreService } from '../../electron-sotre.service';
 import { StoreKeys } from '../../utils/storeKeys';
 import { BitcoinPrice } from '../../app.component';
 

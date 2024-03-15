@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "bitcoin-price-app": {
+    "angular-electron-bitcoin": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/bitcoin-price-app",
+            "outputPath": "dist/angular-electron-bitcoin",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -57,10 +57,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "bitcoin-price-app:build:production"
+              "buildTarget": "angular-electron-bitcoin:build:production"
             },
             "development": {
-              "buildTarget": "bitcoin-price-app:build:development"
+              "buildTarget": "angular-electron-bitcoin:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -68,7 +68,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "bitcoin-price-app:build"
+            "buildTarget": "angular-electron-bitcoin:build"
           }
         },
         "test": {
@@ -93,6 +93,6 @@
     }
   },
   "cli": {
-    "analytics": "ff162cc6-352e-47f0-ab98-21c6e93bf432"
+    "analytics": false
   }
 }

@@ -1,27 +1,40 @@
-# BitcoinPriceApp
+# Bitcoin Price Tracker App
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
+This application displays the closing price of Bitcoin (BTC) in USD over the past 2 weeks, including the current day. It provides real-time updates for the current day's price, which refreshes every 60 seconds. Additionally, users can view details of each day's price in USD, EUR, and COP by selecting a specific day from the list.
 
-## Development server
+## Installation
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+To install and run the app, follow these simple steps:
 
-## Code scaffolding
+1. Install dependencies:
+    ```bash
+    npm i
+    ```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+2. Run Electron:
+    ```bash
+    npm run electron
+    ```
 
-## Build
+## Features
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- Displays Bitcoin (BTC) closing prices in USD for the past 2 weeks.
+- Real-time update for the current day's price every 60 seconds.
+- Static display of prices for past days based on their closing price in USD.
+- Selecting a day from the list shows detailed information including the price in USD, EUR, and COP.
+- Offline functionality: Stores the latest fetched information locally to ensure app functionality even without an internet connection. Persistence is implemented using the application container.
+- External API requests are managed within the application container to bypass CORS issues.
 
-## Running unit tests
+## Technologies Used
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Angular
+- Electron
+- Node.js
+- Axios
 
-## Running end-to-end tests
+## Notes
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- Ensure internet connectivity for real-time updates.
+- For offline functionality, the latest fetched information will be displayed in case of no internet connection.
+- For security reasons, API requests are managed within the application container to avoid CORS issues.
+- This app does not utilize browser local storage; instead, it implements data persistence using the application container.

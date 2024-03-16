@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ElectronStoreService } from '../../electron-sotre.service';
 import { StoreKeys } from '../../utils/storeKeys';
 import { BitcoinPrice } from '../../app.component';
+import { IpcService } from '../../ipc.service';
 
 export interface Currency {
   meta:     Meta;
@@ -37,7 +38,7 @@ export interface Prices {
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
 })
-export class DetailsComponent {
+export class DetailsComponent implements OnDestroy {
 
   date: string = "";
   currentPriceUSD: number = 0;
@@ -45,7 +46,14 @@ export class DetailsComponent {
 
   currencyData: Currency | undefined;
 
-  constructor(private electronStoreService: ElectronStoreService, private activatedRoute: ActivatedRoute, private router: Router) {
+  constructor(private electronStoreService: ElectronStoreService, private activatedRoute: ActivatedRoute, private router: Router, private ipcService : IpcService,  private cdRef: ChangeDetectorRef) {
+    ipcService.on("update-current-price", () => {
+      this.showDetails();
+    });  
+    this.ipcService.send("get-current-price");
+  } 
+
+  showDetails () {
     this.date = this.activatedRoute.snapshot.paramMap.get('date') || "";
     this.currentPriceUSD = this.electronStoreService.get<BitcoinPrice>(StoreKeys.BitcoinsPrices).bpi[this.date] || 0;
     this.currencyData = this.electronStoreService.get<Currency>(StoreKeys.CurrencyData);
@@ -56,11 +64,15 @@ export class DetailsComponent {
       this.prices.push({code: "COP", value: this.currentPriceUSD * this.currencyData.rates["COP"]});
     }
 
-  } 
+    this.cdRef.detectChanges();
+  }
   
   goBack() {
     this.router.navigate([""]);
   }
 
+  ngOnDestroy() {
+    this.ipcService.removeAllListeners("update-current-price");
+  }
 
 }

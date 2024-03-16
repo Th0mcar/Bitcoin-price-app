@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router'; 
 import { CommonModule } from '@angular/common';
 import { OnInit } from '@angular/core';
 import { ElectronStoreService } from '../../electron-sotre.service';
 import { StoreKeys } from '../../utils/storeKeys';
+import { IpcService } from '../../ipc.service';
 
 
 export interface BitcoinPrice {
@@ -30,14 +31,16 @@ export interface BitcoinsToShow {
   styleUrl: './home.component.css'
 })
 
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   
-  bitcoinsPricesLastTwoWeeks: BitcoinPrice;
-  bitcoinsToShow: BitcoinsToShow[] = [];
+  bitcoinsPricesLastTwoWeeks: BitcoinPrice | undefined;
+  bitcoinsToShow: BitcoinsToShow[] = [];  
 
-
-  constructor(private electronStoreService: ElectronStoreService, private router: Router) {
-    this.bitcoinsPricesLastTwoWeeks = this.electronStoreService.get(StoreKeys.BitcoinsPrices);
+  constructor(private electronStoreService: ElectronStoreService, private router: Router, private ipcService : IpcService,  private cdRef: ChangeDetectorRef) {
+    ipcService.on("update-current-price", () => {
+      this.showBitcoinsPrices();
+    }); 
+    this.ipcService.send("get-current-price");
   }
 
   navigateToDetails(date: string) {
@@ -45,13 +48,24 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      const keys = Object.keys(this.bitcoinsPricesLastTwoWeeks.bpi);
+      this.showBitcoinsPrices();
+  }
+
+  showBitcoinsPrices = () => {
+    this.bitcoinsToShow = [];
+    this.bitcoinsPricesLastTwoWeeks = this.electronStoreService.get(StoreKeys.BitcoinsPrices);
+    const keys = Object.keys(this.bitcoinsPricesLastTwoWeeks!.bpi);
       keys.forEach(key => {
-        this.bitcoinsToShow.push({date: key, value: this.bitcoinsPricesLastTwoWeeks.bpi[key]});
+        this.bitcoinsToShow.push({date: key, value: this.bitcoinsPricesLastTwoWeeks!.bpi[key]});
       });
       this.bitcoinsToShow.sort((a, b) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
-      })
+      });
+      this.cdRef.detectChanges();
+  }
+
+  ngOnDestroy() {
+    this.ipcService.removeAllListeners("update-current-price");
   }
 
 }

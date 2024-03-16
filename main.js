@@ -1,4 +1,4 @@
-const { app, BrowserWindow, screen } = require("electron");
+const { app, BrowserWindow, screen, ipcMain } = require("electron");
 const storeClass = require("electron-store");
 const getBitcoinInfo = require("./scripts/getBitcoinsInfo");
 const getCurrentValue = require("./scripts/getCurrentValue");
@@ -6,6 +6,10 @@ const getCurrencyRates = require("./scripts/getCurrencyRates");
 let appWin;
 
 const store = new storeClass();
+
+ipcMain.on("get-current-price",async (event, arg) => {
+   await autoUpdateCurrentPrice()
+});
 
 createWindow = () => {
     appWin = new BrowserWindow({
@@ -26,22 +30,19 @@ createWindow = () => {
         appWin = null;
     });
 
-    let primaryDisplay = screen.getPrimaryDisplay();
-    let dimensions = primaryDisplay.size;
-    let winWidth = 400;
-    let winHeight = 900;
-    let x = dimensions.width - winWidth;
-    let y = 0; 
+    const primaryDisplay = screen.getPrimaryDisplay();
+    const dimensions = primaryDisplay.size;
+    const winWidth = 400; 
+    const x = dimensions.width - winWidth;
+    const y = 0; 
     appWin.setPosition(x, y);
 }
 
 app.on("ready",async () => {
     try {
-        const data = await getBitcoinInfo();
         const currencyData = await getCurrencyRates();
         store.set('currencyData', currencyData);
-        await autoUpdateCurrentPrice(data);
-        setInterval(async () => await autoUpdateCurrentPrice(data), 60 * 1000);
+        setInterval(async () => await autoUpdateCurrentPrice(), 60 * 1000);
     } catch (error) {
         console.error(error);
     }
@@ -55,9 +56,11 @@ app.on("window-all-closed", () => {
     }
 });
 
-async function autoUpdateCurrentPrice(lastTwoWeeksPrices) {
+async function autoUpdateCurrentPrice() {
     console.log('Updating...')
     try {
+        
+        const lastTwoWeeksPrices = await getBitcoinInfo();
         const current = await getCurrentValue(); 
         const date = new Date();
         const offset = date.getTimezoneOffset();
@@ -66,6 +69,8 @@ async function autoUpdateCurrentPrice(lastTwoWeeksPrices) {
         store.set('bitcoinsPrices', {...lastTwoWeeksPrices, bpi: {
             ...lastTwoWeeksPrices.bpi, [adjustedDate.toISOString().split('T')[0]] : current.bpi.USD.rate_float
         }});
+
+        appWin.webContents.send('update-current-price');
     } catch (error) {
         console.error(error);
     } finally {
